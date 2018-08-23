@@ -1,21 +1,37 @@
 require("dotenv").config();
 
+
 // var spotify = new Spotify(keys.spotify);
 // var client = new Twitter(keys.twitter);
 
-// var reqest = require("request");
+var request = require("request");
+var nodeArgs = process.argv;
+var movieInput = "";
 
-// var movie = process.argv[3];
-// var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
- 
-// console.log(movie);
+// Loop through all the words in the node argument
+// And do a little for-loop magic to handle the inclusion of "+"s
+for (var i = 3; i < nodeArgs.length; i++) {
+
+    if (i > 3 && i < nodeArgs.length) {
+
+        movieInput = movieName + "+" + nodeArgs[i];
+
+    }
+
+    else {
+
+        movieInput += nodeArgs[i];
+
+    }
+}
+
+
 
 // --------------------------------------------------------------------------------
 var Cmd = process.argv[2];
 console.log(Cmd);
-var spellItOut;
 
-switch (Cmd){
+switch (Cmd) {
     case "my-tweets":
         twitter();
         break;
@@ -25,7 +41,11 @@ switch (Cmd){
         break;
 
     case "movie-this":
-        omdbapi();
+        if (movieInput) {
+            omdbapi(movieInput)
+        } else {
+            omdbapi("Mr. Nobody")
+        };
         break;
 
     case "do-what-it-says":
@@ -35,20 +55,33 @@ switch (Cmd){
 
 
 
-function twitter(){
+function twitter() {
     console.log("My Twitter API is not in order yet!");
-
 };
 
-function spotify(){
+function spotify() {
     console.log("Spotify sings wrong.");
 };
 
-function omdbapi(){
+
+
+function omdbapi() {
     console.log("Give me my movie");
+
+    // var movie = process.argv[3];
+    var queryURL = "https://www.omdbapi.com/?t=" + movieInput + "&y=&plot=short&apikey=trilogy";
+
+    request(queryURL, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+
+
+            console.log("This is my body:" + (body));
+
+
+        }
+    })
 };
 
-function doIt(){
+function doIt() {
     console.log("Do what I say!");
 };
-
