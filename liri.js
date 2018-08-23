@@ -3,6 +3,7 @@ require("dotenv").config();
 
 // var spotify = new Spotify(keys.spotify);
 // var client = new Twitter(keys.twitter);
+var fs = require("fs");
 
 var request = require("request");
 var nodeArgs = process.argv;
@@ -14,7 +15,7 @@ for (var i = 3; i < nodeArgs.length; i++) {
 
     if (i > 3 && i < nodeArgs.length) {
 
-        movieInput = movieName + "+" + nodeArgs[i];
+        movieInput = movieInput + "+" + nodeArgs[i];
 
     }
 
@@ -23,7 +24,8 @@ for (var i = 3; i < nodeArgs.length; i++) {
         movieInput += nodeArgs[i];
 
     }
-}
+};
+console.log(movieInput);
 
 
 
@@ -41,11 +43,7 @@ switch (Cmd) {
         break;
 
     case "movie-this":
-        if (movieInput) {
-            omdbapi(movieInput)
-        } else {
-            omdbapi("Mr. Nobody")
-        };
+        omdbapi();
         break;
 
     case "do-what-it-says":
@@ -68,20 +66,45 @@ function spotify() {
 function omdbapi() {
     console.log("Give me my movie");
 
-    // var movie = process.argv[3];
     var queryURL = "https://www.omdbapi.com/?t=" + movieInput + "&y=&plot=short&apikey=trilogy";
 
     request(queryURL, function (error, response, body) {
+
+
         if (!error && response.statusCode === 200) {
 
-
-            console.log("This is my body:" + (body));
-
+            console.log('Movie title: ' + JSON.parse(body).Title);
+            console.log('Year: ' + JSON.parse(body).Year);
+            console.log('Rated: ' + JSON.parse(body).Rated);
+            console.log('Language: ' + JSON.parse(body).Language);
+            console.log('Country: ' + JSON.parse(body).Country);
+            console.log('Director: ' + JSON.parse(body).Director);
+            console.log('Actors: ' + JSON.parse(body).Actors);
+            console.log('Plot: ' + JSON.parse(body).Plot);
 
         }
     })
 };
 
+
 function doIt() {
     console.log("Do what I say!");
+
+    fs.readFile("random.txt", "utf8", function (error, data) {
+
+        if (error) {
+            return console.log(error);
+        }
+
+
+        console.log(data);
+
+
+        var dataArr = data.split(",");
+
+
+        console.log(dataArr);
+
+    });
+
 };
